@@ -1,4 +1,5 @@
 const PhotoModel = require('../models/photo-model');
+var ImgModel=require('../models/photo-model')
 const { isValidObjectId } = require('mongoose');
 
 const PhotoController = {
@@ -36,7 +37,7 @@ const PhotoController = {
     insert: async (req, res) => {
         // verifier la validité de req.body et retourner un code 400 
         // si invalide (yup)
-
+        
         const result = await PhotoModel.create(req.body);
 
         res.json(result);

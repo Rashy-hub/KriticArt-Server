@@ -3,9 +3,13 @@ Schema = mongoose.Schema;
 const PhotoSchema = Schema({
 
     _id: mongoose.Schema.Types.ObjectId,
-    isRandom: Boolean,
+    isFromApi: Boolean,
     photo_author:{ type: Schema.Types.ObjectId, ref: 'users' },
-    comments:[{ type: Schema.Types.ObjectId, ref: 'review' }]
+    comments:[{ type: Schema.Types.ObjectId, ref: 'review' }],
+    image:{
+        data:Buffer,
+        contentType:String
+    }
    
   
 })
