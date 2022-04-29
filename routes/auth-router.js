@@ -1,4 +1,5 @@
 const authController = require('../controllers/auth-controller');
+const { authentificateJwt } = require('../middlewares/authentificate-jwt');
 const bodyValidation = require('../middlewares/body-validation-middleware');
 const { registerValidator, loginValidator } = require('../validators/auth-validator');
 
@@ -14,5 +15,7 @@ authRouter.route('/register')
 
 authRouter.route('/login')
     .post(bodyValidation(loginValidator), authController.login);
+    
+
 
 module.exports = authRouter;

@@ -1,5 +1,5 @@
 const { decodeJWT } = require('../utils/jwt-utils');
-const db = require('../models');
+const UserModel = require('../models/users-model');
 //const { Op } = require('sequelize');
 
 /**
@@ -43,15 +43,9 @@ const authentificateJwt = (options = { adminRight: false }) => {
         if (options.adminRight) {
             // Validation des droits via la base de donnée 
             // -> Certitude d'avoir les données à jours
-            const admin = await db.Member.findOne({
-                where: {
-                    [Op.and]: [
-                        { id: tokenData.id },
-                        { isAdmin: true }
-                    ]
-                }
-            });
 
+            const admin=await UserModel.findOne({ "_id": tokenData.id , "isAdmin": true })//db.users.findOne( { "_id": tokenData.id , "isAdmin": true })
+    
             // Erreur 403 si l'utilisateur n'a pas les droits
             if (!admin) {
                 return res.sendStatus(403);
