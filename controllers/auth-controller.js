@@ -1,5 +1,6 @@
 //const db = require('../models'); replace with mongoose schema
 const bcrypt = require('bcrypt');
+const UserModel=require('../models/users-model')
 //replace Op object (sequalize) with mongooose
 const { ErrorResponse } = require('../response-schemas/error-schema');
 const { generateJWT } = require('../utils/jwt-utils');
@@ -8,29 +9,31 @@ const authController = {
 
     register: async (req, res) => {
         // Recuperation des données
-        const { pseudo, email } = req.validatedData;
-        
+        const { username, email } = req.validatedData;
+       
         // Hashage du mot de passe à l'aide de "bcrypt"
         const password = await bcrypt.hash(req.validatedData.password, 10);
 
         // Création du compte en base de données
+        
+        // Create an instance of model SomeModel
+        const newuser = new UserModel({username, email ,password});
 
-        //const member = await db.Member.create({ pseudo, email, password });
+        //save data
+        newuser.save(function (err) {
+            if (err) 
+            return (console.log(err))
+            // saved!
+          });
+   
 
-        // Génération d'un « Json Web Token »
-  /*       const token = await generateJWT({
-            id: member.id,
-            pseudo: member.pseudo,
-            isAdmin: member.isAdmin
-        }); */
-
-        //Generation du token JWT V2
-
+      //   Génération d'un « Json Web Token »
         const token = await generateJWT({
-            id: 1,
-            pseudo:pseudo,
-            isAdmin: false
-        });
+            id: newuser._id,
+            pseudo: newuser.username,
+            isAdmin: newuser.isAdmin
+        }); 
+
 
         // Envoi du token
         res.json(token);
@@ -41,26 +44,26 @@ const authController = {
         const { identifier, password } = req.validatedData;
 
         // Récuperation du compte "member" à l'aide du pseudo ou de l'email avec mongoose
-        const member = {pseudo:identifier,email:"test@gmail.com"}
-
+        //const member = {pseudo:identifier,email:"test@gmail.com"}
+        const logeduser=await UserModel.findOne({ "username":identifier,"email" : req.body.email })
         // Erreur 422, si le member n'existe pas (pseudo ou email invalide)
-        if (!member) {
+        if (!logeduser) {
             return res.status(422).json(new ErrorResponse('Bad credential', 422));
         }
 
         // Si le member existe: Vérification du password via "bcrypt"
-        const isValid = await bcrypt.compare(password, member.password);
+        const isValid = await bcrypt.compare(password, logeduser.password);
 
         // Erreur 422, si le mot de passe ne correspond pas au hashage
         if (!isValid) {
             return res.status(422).json(new ErrorResponse('Bad credential', 422));
         }
-
+       // console.log(`ici les data login ${isValid} ${logeduser}`)
         // Génération d'un « Json Web Token »
         const token = await generateJWT({
-            id: member.id,
-            pseudo: member.pseudo,
-            isAdmin: member.isAdmin
+            id: logeduser._id,
+            pseudo: logeduser.username,
+            isAdmin: logeduser.isAdmin
         });
 
         // Envoi du token

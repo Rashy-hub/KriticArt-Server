@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(cors());
 
 // Initialize Database 
- dbo.connectDB()
+dbo.connectDB()
 
 
 // Add Routing

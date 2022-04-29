@@ -2,7 +2,7 @@ const mongoose = require('mongoose'),
 Schema = mongoose.Schema;
 const ReviewSchema = Schema({
 
-    
+    _id: mongoose.Schema.Types.ObjectId,
     photo_id:{ type: Schema.Types.ObjectId, ref: 'photo' },
 
     reviews:[
