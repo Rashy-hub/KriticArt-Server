@@ -62,4 +62,5 @@ const authentificateJwt = (options = { adminRight: false }) => {
 
 module.exports = {
     authentificateJwt
+    
 };
