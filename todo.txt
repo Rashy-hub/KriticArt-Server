@@ -1,3 +1,24 @@
 -modifier le middlewares authentificate-jwt pour pouvoir l'utiliser avec mongoose DONE
 -Preparer les routes > refléchir à l'utilisation de l'utilisateur de la futur app
 -Preparer les controlleurs qui sont appelé par les routes (sans implémenter la communication avec la db)
+
+
+
+Structure du projet
+
+*server
+-architecture REST Api
+-multer et sharp pixel pour gerer l'upload des images
+-
+
+
+
+
+server endpoints :
+
+
+
+client
+
+
+client react-router-dom:
