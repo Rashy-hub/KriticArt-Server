@@ -18,25 +18,31 @@ const authController = {
         
         // Create an instance of model SomeModel
         const newuser = new UserModel({username, email ,password});
-
-        //save data
-        newuser.save(function (err) {
-            if (err) 
-            return (console.log(err))
-            // saved!
-          });
-   
-
-      //   Génération d'un « Json Web Token »
+        //   Génération d'un « Json Web Token »
         const token = await generateJWT({
             id: newuser._id,
             pseudo: newuser.username,
             isAdmin: newuser.isAdmin
         }); 
 
+        //save data
+        await newuser.save(function (err) {
+            if (err) 
+            {   
+                return res.status(422).json(new ErrorResponse('Bad credential ' + err, 422));
+            }
+           
+            // Envoi du token
+            res.json(token);
+            console.log( username +" has been registred in database")
+            // saved!
+          });
+   
 
-        // Envoi du token
-        res.json(token);
+      
+
+
+        
     },
 
     login: async (req, res) => {
