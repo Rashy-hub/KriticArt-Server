@@ -1,5 +1,5 @@
 const multer = require('multer');
-const {GridFsStorage} = require('multer-gridfs-storage');
+
 
 const MIME_TYPES = {
   'image/jpg': 'jpg',

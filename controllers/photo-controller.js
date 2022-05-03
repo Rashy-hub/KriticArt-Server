@@ -47,31 +47,13 @@ const PhotoController = {
     },
 
     update: async (req, res) => {
-        // verifier la validité de req.body et retourner un code 400 
-        // si invalide (yup)
-       
-     /*    if (!isValidObjectId(req.params.id)) {
-            res.sendStatus(404);
-            return;
-        } */
-        var fs = require('fs');
-        mypath="C:\\Users\\Local_user.DESKTOP-0S2DMSC\\Desktop\\KriticArt\\server\\public\\image\\"
-        // + "/uploads/" + req.file.filename
-        const {isFromApi}= req.query
-
-        // const obj = {
-        //     img: {
-        //         data: req.file,//fs.readFileSync(mypath+req.file.filename)), // NOPE :D
-        //         contentType: "image/png"
-        //     }
-        // }
-
+         
+        const {isFromApi}= req.query   
         const image = {
-            data: req.file.buffer,        // Si save in Mongo => Config multer :p
+            data: req.file.buffer,        
             contentType:req.file.mimetype
-        }
+        }     
         
-        // { new: true } => result est modifié 
         console.log(" SAVING PICTURE ")
         const newphoto = new PhotoModel({isFromApi, photo_author:req.user.id,image});
         
@@ -80,7 +62,7 @@ const PhotoController = {
             
             if (err) 
             return (console.log(err + " MONGO SAVE FAILED "))
-            // saved!
+           
           });
 
         res.json(newphoto._id);
