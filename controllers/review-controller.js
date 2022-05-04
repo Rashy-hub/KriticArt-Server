@@ -2,7 +2,7 @@ const ReviewModel = require('../models/review-model');
 const { isValidObjectId } = require('mongoose');
 
 const ReviewController = {
-    get: async (req, res) => {
+    getAll: async (req, res) => {
 
         let { limit, offset } = req.query;
 
@@ -19,19 +19,7 @@ const ReviewController = {
         res.json(result);
     },
 
-    getById: async (req, res) => {
-        if (!isValidObjectId(req.params.id)) {
-            res.sendStatus(404);
-            return;
-        }
 
-        const result = await ReviewModel.findById(req.params.id);
-        if (!result) {
-            res.sendStatus(404);
-            return;
-        }
-        res.json(result);
-    },
 
     insert: async (req, res) => {
         // verifier la validité de req.body et retourner un code 400 

@@ -7,14 +7,20 @@ const ReviewSchema = Schema({
 
     reviews:[
         {  
-            comment:String  ,
-            review_author:  { type: Schema.Types.ObjectId, ref: 'users' }   
+            review_author:  { type: Schema.Types.ObjectId, ref: 'users' }  ,
+            comment:String  ,            
+            rating: {
+                type: Number,
+                min: 1,
+                max: 5,
+                validate: {validator: Number.isInteger}
+            },
+             
    
         }
     ],
-    rating:Number,
-    myrating:Number
-   
+ 
+    
   
 })
 

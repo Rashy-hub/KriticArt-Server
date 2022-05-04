@@ -46,7 +46,7 @@ const PhotoController = {
         res.json(result);
     },
 
-    update: async (req, res) => {
+    upload: async (req, res) => {
          
         const {isFromApi}= req.query   
         const image = {
