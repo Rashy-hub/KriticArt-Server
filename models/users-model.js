@@ -7,7 +7,10 @@ const UserSchema = new mongoose.Schema({
   email: {type: String, lowercase: true, unique: true, required: [true, "can't be blank"], match: [/\S+@\S+\.\S+/, 'is invalid'], index: true},
   password: String,
   bio: String,
-  image: String,  
+  image:{
+    data:String,
+    contentType:String
+  }  ,
   salt: String,
   isAdmin:Boolean
 }, {timestamps: true});

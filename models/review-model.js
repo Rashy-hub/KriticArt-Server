@@ -12,7 +12,8 @@ const ReviewSchema = Schema({
    
         }
     ],
-    rating:Number
+    rating:Number,
+    myrating:Number
    
   
 })

@@ -5,24 +5,32 @@ const ProfilController = {
 
     update: async (req, res) => {
          
+
+        const {bio}= req.query  
         //const {isFromApi}= req.query   
+
         const image = {
-            data: req.file.buffer,        
+            data: req.file.buffer.toString('base64'),        
             contentType:req.file.mimetype
         }     
         
         console.log(" SAVING PROFIL ")
-        const newphoto = new PhotoModel({isFromApi, photo_author:req.user.id,image});
-        
-        //save data
-        await newphoto.save(function (err) {
-            
-            if (err) 
-            return (console.log(err + " MONGO SAVE FAILED "))
-           
-          });
 
-        res.json(newphoto._id);
+       
+
+    const filter = { _id: req.user.id };
+    const update = { bio: bio ,image:image };
+    console.log(update);
+
+    // `doc` is the document _before_ `update` was applied
+        let updated=await UserModel.findOneAndUpdate(filter, update,{
+            returnOriginal: false
+        })
+                   
+        //save data
+      
+        res.json(updated);
+        // res.json(" update sucess ");
     }
 
 }

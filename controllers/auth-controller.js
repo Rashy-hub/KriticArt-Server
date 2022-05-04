@@ -73,6 +73,7 @@ const authController = {
         });
 
         // Envoi du token
+        console.log( logeduser.username +" is logged ")
         res.json(token);
     }
 };
