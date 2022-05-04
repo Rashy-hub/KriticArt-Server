@@ -10,7 +10,7 @@ const reviewRouter = require('express').Router();
 // - Route "/login" pour obtenir un JSON Web Token d'identification
 
 reviewRouter.route('/post')
-    .post(authentificateJwt(), ReviewController.insert);
+    .post(authentificateJwt(), ReviewController.post);
 reviewRouter.route('/showall')
     .get(authentificateJwt(), ReviewController.getAll);
   

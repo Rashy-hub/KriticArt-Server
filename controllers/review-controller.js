@@ -1,10 +1,11 @@
 const ReviewModel = require('../models/review-model');
 const { isValidObjectId } = require('mongoose');
 
+
 const ReviewController = {
     getAll: async (req, res) => {
 
-        let { limit, offset } = req.query;
+        let { limit, offset ,photo_id} = req.query;
 
         limit = limit ?? 5;
         offset = offset ?? 0;
@@ -14,20 +15,66 @@ const ReviewController = {
         }
 
         const result = await ReviewModel.find()
+            .$where('photo_id').equals(photo_id)
             .skip(offset)
             .limit(limit);
+        console.log(result)    
         res.json(result);
+
+
+/*      exemple :   Person.
+  find({ occupation: /host/ }).
+  where('name.last').equals('Ghost'). */
     },
 
 
 
-    insert: async (req, res) => {
+    post: async (req, res) => {
         // verifier la validité de req.body et retourner un code 400 
         // si invalide (yup)
+        let { photo_id,rating} = req.query;
+      
+        
+        const result = await ReviewModel.find()
+            .where('photo_id').equals(photo_id);
+            //console.log(result)
+       
+        if(!result)
+        {
+            const newreview  = new ReviewModel({photo_id:photo_id,reviews:[{review_author:req.user.id,comment:req.body.comment,rating:rating}]});
+            console.log(" NEW  REVIEW HAS BEEN CREATED")
+              //save data
+          await newreview.save(function (err) {
+            
+            if (err) 
+            return (console.log(err + " MONGO  REVIEW SAVE FAILED "))
+            else
+            console.log(" REVIEW HAS BEEN SAVED ")
+           
+          });
 
-        const result = await ReviewModel.create(req.body);
+          res.json(newreview._id);
+        }     
+       
+        else{
+            const nextreview={review_author:req.user.id,comment:req.body.comment,rating:rating}
+            //console.log(result)
+            result[0].reviews.push(nextreview)
+            const appendReview=result
+            
 
-        res.json(result);
+            const filter = { photo_id: photo_id };
+            const update = { reviews: appendReview };
+            console.log(update.reviews)
+
+            await ReviewModel.findOneAndUpdate(filter, update.reviews);
+
+              
+            res.json(result._id);
+        }
+
+        
+       
     },
 
     update: async (req, res) => {

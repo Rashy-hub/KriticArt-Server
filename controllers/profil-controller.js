@@ -23,14 +23,14 @@ const ProfilController = {
     console.log(update);
 
     // `doc` is the document _before_ `update` was applied
-        let updated=await UserModel.findOneAndUpdate(filter, update,{
+        let updated =await UserModel.findOneAndUpdate(filter, update,{
             returnOriginal: false
         })
                    
         //save data
       
         res.json(updated);
-        // res.json(" update sucess ");
+        //res.json(" update sucess ");
     }
 
 }
