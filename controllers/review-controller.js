@@ -59,15 +59,16 @@ const ReviewController = {
         else{
             const nextreview={review_author:req.user.id,comment:req.body.comment,rating:rating}
             //console.log(result)
-            result[0].reviews.push(nextreview)
-            const appendReview=result
+            //result[0].reviews.push(nextreview)
+            //const appendReview=result
             
 
             const filter = { photo_id: photo_id };
-            const update = { reviews: appendReview };
-            console.log(update.reviews)
+            //const update = { reviews: appendReview };
+            const update ={$push: { reviews: nextreview }}
+            //console.log(update.reviews)
 
-            await ReviewModel.findOneAndUpdate(filter, update.reviews);
+            await ReviewModel.findOneAndUpdate(filter, update);
 
               
             res.json(result._id);
