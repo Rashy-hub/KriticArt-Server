@@ -7,7 +7,7 @@ const db = require("../models");
 
 const dbConnection=()=>{
     const connectionString = process.env.MONGO_LOCAL
-    mongoose.connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: true});
+    mongoose.connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: true,useCreateIndex: true,autoIndex: true});
     //Get the default connection
     let dbConnection = mongoose.connection;
     console.log(dbConnection)

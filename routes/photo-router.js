@@ -9,8 +9,13 @@ const photoRouter = require('express').Router();
 // - Route "/register" pour créer un compte et récuperer un token d'identification
 // - Route "/login" pour obtenir un JSON Web Token d'identification
 
+
+photoRouter.route('/get')
+    .get(authentificateJwt(),PhotoController.getById)
 photoRouter.route('/upload')
     .post(authentificateJwt(),multerConfig('upload_image'), PhotoController.upload);
+
+ 
 
 
     

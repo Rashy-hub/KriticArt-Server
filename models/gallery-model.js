@@ -13,7 +13,7 @@ const GallerySchema = Schema({
 })
 
 
-const GalleryModel = mongoose.model('review', GallerySchema);
+const GalleryModel = mongoose.model('gallery', GallerySchema);
     
     
 module.exports = GalleryModel;

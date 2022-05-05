@@ -9,10 +9,10 @@ const reviewRouter = require('express').Router();
 // - Route "/register" pour créer un compte et récuperer un token d'identification
 // - Route "/login" pour obtenir un JSON Web Token d'identification
 
-reviewRouter.route('/post')
-    .post(authentificateJwt(), ReviewController.post);
-reviewRouter.route('/showall')
-    .get(authentificateJwt(), ReviewController.getAll);
+reviewRouter.route('/:photoId/comment')
+    .post(authentificateJwt(), ReviewController.postComment);
+reviewRouter.route('/:photoId/comment')
+    .get(authentificateJwt(), ReviewController.getComments);
   
 
 module.exports = reviewRouter;

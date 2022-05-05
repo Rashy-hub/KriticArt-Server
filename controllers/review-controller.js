@@ -1,109 +1,100 @@
 const ReviewModel = require('../models/review-model');
-const { isValidObjectId } = require('mongoose');
+
 
 
 const ReviewController = {
-    getAll: async (req, res) => {
+    getComments: async (req, res) => {
 
-        let { limit, offset ,photo_id} = req.query;
+        let { limit, offset} = req.query;
+        const photo_id = req.params.photoId;
 
-        limit = limit ?? 5;
-        offset = offset ?? 0;
+        limit = parseInt(limit ?? 5);
+        offset = parseInt(offset ?? 0);
 
         if (limit <= 0 || offset < 0) {
             res.sendStatus(400);
         }
 
-        const result = await ReviewModel.find()
-            .$where('photo_id').equals(photo_id)
-            .skip(offset)
-            .limit(limit);
-        console.log(result)    
-        res.json(result);
+        const result = await ReviewModel.findOne()
+            .where('photo_id').equals(photo_id);
 
+        const reviews = result.reviews.slice(offset, limit + offset);
 
-/*      exemple :   Person.
-  find({ occupation: /host/ }).
-  where('name.last').equals('Ghost'). */
+        //console.log(reviews)    
+        res.json(reviews);
+
     },
 
-
-
-    post: async (req, res) => {
+    postComment: async (req, res) => {
         // verifier la validité de req.body et retourner un code 400 
         // si invalide (yup)
-        let { photo_id,rating} = req.query;
-      
-        
-        const result = await ReviewModel.find()
+        let  photo_id = req.params.photoId;        
+        const result = await ReviewModel.findOne()
             .where('photo_id').equals(photo_id);
-            //console.log(result)
-       
+        
         if(!result)
         {
-            const newreview  = new ReviewModel({photo_id:photo_id,reviews:[{review_author:req.user.id,comment:req.body.comment,rating:rating}]});
-            console.log(" NEW  REVIEW HAS BEEN CREATED")
+            const newreview  = new ReviewModel({photo_id:photo_id,reviews:[{review_author:req.user.id,comment:req.body.comment}]});
+            console.log(" NEW  REVIEW HAS BEEN CREATED with comment")
               //save data
-          await newreview.save(function (err) {
-            
-            if (err) 
-            return (console.log(err + " MONGO  REVIEW SAVE FAILED "))
-            else
-            console.log(" REVIEW HAS BEEN SAVED ")
+            await newreview.save(function (err) {                
+                if (err) 
+                    return (console.log(err + " MONGO  REVIEW SAVE FAILED "))
+                else
+            console.log(" COMMENT HAS BEEN SAVED ")
            
           });
 
           res.json(newreview._id);
         }     
        
-        else{
-            const nextreview={review_author:req.user.id,comment:req.body.comment,rating:rating}
-            //console.log(result)
-            //result[0].reviews.push(nextreview)
-            //const appendReview=result
-            
-
-            const filter = { photo_id: photo_id };
-            //const update = { reviews: appendReview };
-            const update ={$push: { reviews: nextreview }}
-            //console.log(update.reviews)
-
-            await ReviewModel.findOneAndUpdate(filter, update);
-
-              
+        else
+        {
+            console.log("REVIEW HAS BEEN UPDATED")
+            const nextreview={review_author:req.user.id,comment:req.body.comment}                   
+            const filter = { photo_id: photo_id };            
+            const update ={$push: { reviews: nextreview }}         
+            await ReviewModel.findOneAndUpdate(filter, update);              
             res.json(result._id);
         }
 
-        
-       
     },
 
-    update: async (req, res) => {
-        // verifier la validité de req.body et retourner un code 400 
-        // si invalide (yup)
+    postRating: async (req, res) => {
+        let { photo_id,rating} = req.query;        
+        const result = await ReviewModel.findOne()
+            .where('photo_id').equals(photo_id);
 
-        if (!isValidObjectId(req.params.id)) {
-            res.sendStatus(404);
-            return;
-        }
+            if(!result)
+            {
+                const newreview  = new ReviewModel({photo_id:photo_id,reviews:[],ratings:[{rating_author:req.user.id,rating:rating}]});
+                console.log(" NEW  REVIEW HAS BEEN CREATED : with rating ")
+                  //save data
+                await newreview.save(function (err) {                
+                    if (err) 
+                        return (console.log(err + " MONGO  REVIEW SAVE FAILED "))
+                    else
+                console.log(" RATING HAS BEEN SAVED ")
+               
+              });
+    
+              res.json(newreview._id);
+            }     
+           
+            else
+            {
+                console.log("REVIEW HAS BEEN UPDATED")
+                const nextrating={rating_author:req.user.id,rating:rating}                   
+                const filter = { photo_id: photo_id };            
+                const update ={$push: { ratings: nextrating }}         
+                await ReviewModel.findOneAndUpdate(filter, update);              
+                res.json(result._id);
+            }
 
-        // { new: true } => result est modifié 
-        const result = await ReviewModel
-            .findByIdAndUpdate(req.params.id, req.body, { new: true });
-
-        if (!result) {
-            res.sendStatus(404);
-            return;
-        }
-
-        res.json(result);
     },
 
-    delete: async (req, res) => {
-        if (!isValidObjectId(req.params.id)) {
-            res.sendStatus(404);
-            return;
-        }
+      delete: async (req, res) => {
+      
         const result = await ReviewModel.findByIdAndDelete(req.params.id);
         if (!result) {
             res.sendStatus(404);

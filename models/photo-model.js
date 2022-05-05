@@ -4,9 +4,9 @@ const PhotoSchema = Schema({
 
     //_id: mongoose.Schema.Types.ObjectId,
     isFromApi: Boolean,
+    isPublic:Boolean,
     public_api_url:String,
     photo_author:{ type: Schema.Types.ObjectId, ref: 'users' },
-    comments:[{ type: Schema.Types.ObjectId, ref: 'review' }],
     image:{
         data:Buffer,
         contentType:String
