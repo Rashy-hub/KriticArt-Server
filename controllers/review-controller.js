@@ -3,6 +3,7 @@ const ReviewModel = require('../models/review-model');
 
 
 const ReviewController = {
+    
     getComments: async (req, res) => {
 
         let { limit, offset} = req.query;
@@ -27,7 +28,19 @@ const ReviewController = {
 
     getRatings: async (req, res) => {
 
+        const photo_id = req.params.photoId;
+        const result=await ReviewModel.aggregate([
+            {$unwind:"$ratings"},
+            {$group : {_id:"$photo_id",avgRating : {  $avg : "$ratings.rating" }}}
+        ])
+        console.log(result)
+        res.json(result)
        
+
+      /*   cursor = db.teams.aggregate([
+            { $unwind: "$players" },
+            { $group : { _id: "$name", avgAge : {  $avg : "$players.age" } } }
+        ]); */
 
     },
     
@@ -62,7 +75,7 @@ const ReviewController = {
             const nextreview={review_author:req.user.id,comment:req.body.comment}                   
             const filter = { photo_id: photo_id };            
             const update ={$push: { reviews: nextreview }}         
-            await ReviewModel.findOneAndUpdate(filter, update);              
+            await ReviewModel.findOneAndUpdate(filter, update);                
             res.json(result._id);
         }
 
