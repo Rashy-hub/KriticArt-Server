@@ -13,6 +13,10 @@ reviewRouter.route('/:photoId/comment')
     .post(authentificateJwt(), ReviewController.postComment);
 reviewRouter.route('/:photoId/comment')
     .get(authentificateJwt(), ReviewController.getComments);
+reviewRouter.route('/:photoId/rating')
+    .post(authentificateJwt(), ReviewController.postRating);
+reviewRouter.route('/:photoId/rating')
+    .get(authentificateJwt(), ReviewController.getRatings);
   
 
 module.exports = reviewRouter;

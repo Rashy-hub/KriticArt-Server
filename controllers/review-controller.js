@@ -42,7 +42,7 @@ const ReviewController = {
         
         if(!result)
         {
-            const newreview  = new ReviewModel({photo_id:photo_id,reviews:[{review_author:req.user.id,comment:req.body.comment}]});
+            const newreview  = new ReviewModel({photo_id:photo_id,reviews:[{review_author:req.user.id,comment:req.body.comment}],reviews:[]});
             console.log(" NEW  REVIEW HAS BEEN CREATED with comment")
               //save data
             await newreview.save(function (err) {                
@@ -69,9 +69,13 @@ const ReviewController = {
     },
 
     postRating: async (req, res) => {
-        let { photo_id,rating} = req.query;        
-        const result = await ReviewModel.findOne()
-            .where('photo_id').equals(photo_id);
+        let  photo_id = req.params.photoId;  
+        let {rating} = req.query;  
+        
+         const result = await ReviewModel.findOne()
+            .where('photo_id').equals(photo_id); 
+         //( { ratings: { "$in" : ["sushi"]} })
+      
 
             if(!result)
             {
@@ -92,11 +96,28 @@ const ReviewController = {
             else
             {
                 console.log("REVIEW HAS BEEN UPDATED")
-                const nextrating={rating_author:req.user.id,rating:rating}                   
-                const filter = { photo_id: photo_id };            
-                const update ={$push: { ratings: nextrating }}         
-                await ReviewModel.findOneAndUpdate(filter, update);              
-                res.json(result._id);
+                    
+                //check si l'utilisateur actuelle a déja voté pour cette photo
+                const test = await ReviewModel.findOne().where('rating_author').equals(req.user.id)
+                if(!test)
+                {
+                    console.log("FIRST RATING FROM THIS USER")
+                    const nextrating={rating_author:req.user.id,rating:rating}                   
+                    const filter = { photo_id: photo_id};            
+                    const update ={$push:{ ratings: nextrating }}  
+                    await ReviewModel.findOneAndUpdate(filter, update);              
+                    res.json(result._id);
+                }
+                else{
+                    console.log("UPDATE RATING FROM THIS USER")
+                    await ReviewModel.updateOne(
+                        {photo_id:photo_id,'ratings.rating_author':req.user.id},
+                        {$set:{'ratings.$.rating':rating}})
+                        res.json(result._id);
+                }
+                //si non alors je push 
+                //si oui alors je update en remplaçant (pas de push)                                                           
+               
             }
 
     },
