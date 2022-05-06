@@ -25,6 +25,14 @@ const ReviewController = {
 
     },
 
+    getRatings: async (req, res) => {
+
+       
+
+    },
+    
+
+
     postComment: async (req, res) => {
         // verifier la validité de req.body et retourner un code 400 
         // si invalide (yup)
