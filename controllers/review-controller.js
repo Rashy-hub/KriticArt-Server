@@ -32,15 +32,11 @@ const ReviewController = {
         const result=await ReviewModel.aggregate([
             {$unwind:"$ratings"},
             {$group : {_id:"$photo_id",avgRating : {  $avg : "$ratings.rating" }}}
+            //{$group : {$eq:["$photo_id",photo_id],avgRating : {  $avg : "$ratings.rating" }}}
         ])
-        console.log(result)
+        //console.log(result)
         res.json(result)
        
-
-      /*   cursor = db.teams.aggregate([
-            { $unwind: "$players" },
-            { $group : { _id: "$name", avgAge : {  $avg : "$players.age" } } }
-        ]); */
 
     },
     
@@ -55,7 +51,7 @@ const ReviewController = {
         
         if(!result)
         {
-            const newreview  = new ReviewModel({photo_id:photo_id,reviews:[{review_author:req.user.id,comment:req.body.comment}],reviews:[]});
+            const newreview  = new ReviewModel({photo_id:photo_id,reviews:[{review_author:req.user.id,comment:req.body.comment}],ratings:[]});
             console.log(" NEW  REVIEW HAS BEEN CREATED with comment")
               //save data
             await newreview.save(function (err) {                
@@ -111,7 +107,8 @@ const ReviewController = {
                 console.log("REVIEW HAS BEEN UPDATED")
                     
                 //check si l'utilisateur actuelle a déja voté pour cette photo
-                const test = await ReviewModel.findOne().where('rating_author').equals(req.user.id)
+                const test = await ReviewModel.findOne().where('ratings.rating_author').equals(req.user.id)
+               // console.log(test)
                 if(!test)
                 {
                     console.log("FIRST RATING FROM THIS USER")
