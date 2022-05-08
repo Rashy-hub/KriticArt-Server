@@ -48,6 +48,7 @@ const authController = {
     login: async (req, res) => {
         // Recuperation des données
         const { identifier, password } = req.validatedData;
+        
 
         // Récuperation du compte "member" à l'aide du pseudo ou de l'email avec mongoose
         //const member = {pseudo:identifier,email:"test@gmail.com"}
