@@ -11,7 +11,7 @@ const photoRouter = require('express').Router();
 
 
 photoRouter.route('/get')
-    .get(authentificateJwt(),PhotoController.getById)
+    .get(authentificateJwt(),PhotoController.getByIds)
 photoRouter.route('/upload')
     .post(authentificateJwt(),multerConfig('upload_image'), PhotoController.upload);
 

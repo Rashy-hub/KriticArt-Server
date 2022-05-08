@@ -10,9 +10,13 @@ const galleryRouter = require('express').Router();
 // - Route "/login" pour obtenir un JSON Web Token d'identification
 
 galleryRouter.route('/create')
-    .post(authentificateJwt(), GalleryController.create);
-galleryRouter.route('/getbyid')
+    .post(authentificateJwt(), GalleryController.createGallery);
+galleryRouter.route('/:gallery_id/push')
+    .post(authentificateJwt(), GalleryController.updateGallery);
+galleryRouter.route('/:gallery_id/get')
     .get(authentificateJwt(), GalleryController.getById);
+galleryRouter.route('/getall')
+    .get(authentificateJwt(), GalleryController.getByUser);
   
 
 module.exports = galleryRouter;

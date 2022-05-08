@@ -7,11 +7,12 @@ const PhotoSchema = Schema({
     isPublic:Boolean,
     public_api_url:String,
     photo_author:{ type: Schema.Types.ObjectId, ref: 'users' },
+    photo_desc:String,
     image:{
         data:Buffer,
         contentType:String
     },
-    globalrating:Number
+    
 })
 
 

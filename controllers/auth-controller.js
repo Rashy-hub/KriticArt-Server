@@ -39,7 +39,7 @@ const authController = {
           });
    
 
-      
+      // déja preparer une gallerie favorie
 
 
         
