@@ -14,6 +14,9 @@ photoRouter.route('/get')
     .get(authentificateJwt(),PhotoController.getByIds)
 photoRouter.route('/upload')
     .post(authentificateJwt(),multerConfig('upload_image'), PhotoController.upload);
+photoRouter.route('/getprivates')
+    .get(authentificateJwt(), PhotoController.getPrivates);    
+        
 
  
 
