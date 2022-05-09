@@ -37,6 +37,7 @@ const PhotoController = {
   upload: async (req, res) => {
     // const {isFromApi,isPublic,public_api_url}= req.query
     //const { isPublic } = req.query;
+   // console.log()
     const image = {
       data: req.file.buffer,
       contentType: req.file.mimetype,
@@ -45,6 +46,7 @@ const PhotoController = {
     const newphoto = new PhotoModel({
       isPublic: false,
       photo_author: req.user.id,
+      photo_desc:req.file.originalname,
       image,
     });
     //save data
