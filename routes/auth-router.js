@@ -1,7 +1,7 @@
 const authController = require('../controllers/auth-controller');
 //const { authentificateJwt } = require('../middlewares/authentificate-jwt');
 const bodyValidation = require('../middlewares/body-validation-middleware');
-const { registerValidator, loginValidator } = require('../validators/auth-validator');
+const { registerValidator, loginValidator ,refreshValidator} = require('../validators/auth-validator');
 
 
 const authRouter = require('express').Router();
@@ -15,6 +15,11 @@ authRouter.route('/register')
 
 authRouter.route('/login')
     .post(bodyValidation(loginValidator), authController.login);
+
+authRouter.route('/refresh')
+    .post(bodyValidation(refreshValidator), authController.refresh);
+    
+    
     
 
 

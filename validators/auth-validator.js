@@ -10,12 +10,17 @@ const registerValidator = yup.object().shape({
 });
 
 const loginValidator = yup.object().shape({
-    identifier: yup.string().trim().required(),
+    email: yup.string().trim().required(),
     password: yup.string().required()
 });
 
 
+const refreshValidator = yup.object().shape({
+    email: yup.string().trim().required()
+  
+});
 module.exports = {
     registerValidator,
-    loginValidator
+    loginValidator,
+    refreshValidator
 };

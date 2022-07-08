@@ -47,12 +47,12 @@ const authController = {
 
     login: async (req, res) => {
         // Recuperation des données
-        const { identifier, password } = req.validatedData;
+        const { email, password } = req.validatedData;
         
 
         // Récuperation du compte "member" à l'aide du pseudo ou de l'email avec mongoose
         //const member = {pseudo:identifier,email:"test@gmail.com"}
-        const logeduser=await UserModel.findOne({ "username":identifier,"email" : req.body.email })
+        const logeduser=await UserModel.findOne({"email" : email })
         // Erreur 422, si le member n'existe pas (pseudo ou email invalide)
         if (!logeduser) {
             return res.status(422).json(new ErrorResponse('Bad credential', 422));
@@ -76,7 +76,39 @@ const authController = {
         // Envoi du token
         console.log( logeduser.username +" is logged ")
         res.json(token);
+    },
+
+    refresh: async (req, res) => {
+        // Recuperation des données
+        const { email } = req.validatedData;
+        console.log("into refresh: " + email);
+
+        const member = await db.Member.findOne({
+            where: {    // Condition avec un OU en SQL
+                email: { [Op.eq]: email.toLowerCase() }
+            }
+        });
+        if (member) {
+
+            // Génération d'un « Json Web Token »
+            const token = await generateJWT({
+                id: member.id,
+                email: member.email,
+                isadmin: member.isadmin
+            });
+            token.isadmin = member.isadmin;
+            token.id = member.id;
+
+            // Envoi du token
+            res.json(token);
+        } else {
+            res.json(null)
+        }
     }
+
+
+
+
 };
 
 module.exports = authController;
