@@ -6,11 +6,10 @@ const MIME_TYPES = {
   'image/jpeg': 'jpg',
   'image/png': 'png'
 };
-
-const storage =multer.memoryStorage()
+const storage = multer.memoryStorage()
 
 
 module.exports = (filename) => {
-  
-  return multer({storage: storage}).single(filename);
+
+  return multer({ storage: storage }).single(filename);
 } 

@@ -37,7 +37,7 @@ const PhotoController = {
   upload: async (req, res) => {
     // const {isFromApi,isPublic,public_api_url}= req.query
     //const { isPublic } = req.query;
-   // console.log()
+    // console.log()
     const image = {
       data: req.file.buffer,
       contentType: req.file.mimetype,
@@ -46,7 +46,7 @@ const PhotoController = {
     const newphoto = new PhotoModel({
       isPublic: false,
       photo_author: req.user.id,
-      photo_desc:req.file.originalname,
+      photo_desc: req.file.originalname,
       image,
     });
     //save data
@@ -56,8 +56,18 @@ const PhotoController = {
     res.json(newphoto._id);
   },
   getPrivates: async (req, res) => {
-    const records = await PhotoModel.find({ photo_author:req.user.id,isPublic:false });
+    const records = await PhotoModel.find({ photo_author: req.user.id, isPublic: false });
     //console.log(records)
+    res.json(records)
+  },
+
+  getPublics: async (req, res) => {
+    //console.log(req)
+    let { limit, offset } = req.query;
+    const records = await PhotoModel.find({ isPublic: true }).skip(offset).limit(limit);
+    //const photos = records.slice(offset, limit + offset);
+
+
     res.json(records)
   },
 
