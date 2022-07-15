@@ -17,7 +17,7 @@ photoRouter.route('/upload')
 photoRouter.route('/getprivates')
     .get(authentificateJwt(), PhotoController.getPrivates);
 photoRouter.route('/getpublics')
-    .get(authentificateJwt(), PhotoController.getPublics);
+    .get(PhotoController.getPublics);
 
 
 

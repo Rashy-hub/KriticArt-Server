@@ -56,7 +56,9 @@ const PhotoController = {
     res.json(newphoto._id);
   },
   getPrivates: async (req, res) => {
-    const records = await PhotoModel.find({ photo_author: req.user.id, isPublic: false });
+    // const records = await PhotoModel.find({ photo_author: req.user.id, isPublic: false });
+    let { limit, offset } = req.query;
+    const records = await PhotoModel.find({ photo_author: req.user.id, isPublic: false }).skip(offset).limit(limit);
     //console.log(records)
     res.json(records)
   },

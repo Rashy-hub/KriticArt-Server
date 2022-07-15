@@ -2,13 +2,13 @@ const jwt = require('jsonwebtoken');
 
 const generateJWT = ({ id, pseudo, isAdmin }) => {
     return new Promise((resolve, reject) => {
-        const data = { id, pseudo, isAdmin };       
+        const data = { id, pseudo, isAdmin };
         const secret = process.env.JWT_SECRET;
         const options = {
             algorithm: 'HS512',  // HS256 par default
             audience: process.env.JWT_AUDIENCE,
             issuer: process.env.JWT_ISSUER,
-            expiresIn: '12h'    // Format: https://github.com/vercel/ms
+            expiresIn: '1y'    // Format: https://github.com/vercel/ms
         };
 
         jwt.sign(data, secret, options, (error, token) => {
